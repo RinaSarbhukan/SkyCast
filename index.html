@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101a2d">
+    <meta name="description" content="A live, atmospheric weather forecast for cities around the world.">
+    <title>SkyCast | Weather, in the moment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app">
+
+        <!-- Navigation Bar -->
+        <header class="navbar">
+            <div class="location-chip">
+                <span class="location-dot"></span>
+                <span class="location-text">Pune</span>
+            </div>
+
+            <div class="header-actions">
+                <button class="unit-btn" type="button" aria-label="Switch to Fahrenheit">°C</button>
+                <button class="icon-button" type="button" aria-label="Refresh weather">↻</button>
+                <button class="icon-button" type="button" aria-label="Add city">＋</button>
+                <button class="icon-button" type="button" aria-label="Settings" aria-haspopup="dialog" aria-controls="settings-dialog">⚙</button>
+            </div>
+        </header>
+
+        <main>
+
+            <!-- City Search -->
+            <section class="search-section">
+                <div>
+                    <p class="eyebrow">A LITTLE CLOSER TO THE SKY</p>
+                    <h1>Weather, in the moment.</h1>
+                    <p class="subtitle">
+                        Your city's atmosphere, wherever you are.
+                    </p>
+                </div>
+
+                <form class="search-bar">
+                    <span>⌕</span>
+                    <input
+                        type="text"
+                        placeholder="Search a city..."
+                        aria-label="City name"
+                    >
+                    <button type="submit">Search</button>
+                </form>
+            </section>
+
+            <section class="recent-searches" aria-label="Recent searches" hidden>
+                <div class="recent-search-heading">
+                    <h2>Recent searches</h2>
+                    <button class="clear-recent" type="button">Clear</button>
+                </div>
+                <div class="recent-search-list" id="recent-searches"></div>
+            </section>
+
+            <p class="weather-status" id="weather-status" role="status" aria-live="polite"></p>
+
+            <!-- Current Weather -->
+            <section class="current-weather panel" aria-label="Current weather">
+                <div class="weather-info">
+                    <div class="weather-hero-meta">
+                        <p class="hero-kicker"><span class="live-dot"></span> RIGHT NOW</p>
+                        <div class="aqi-pill">
+                            <span class="aqi-icon">◌</span>
+                            <span id="air-quality-inline">AQI 42 · Good</span>
+                        </div>
+                    </div>
+
+                    <h2>Pune, India</h2>
+                    <p class="hero-local-time muted" id="local-datetime">Local date and time</p>
+
+                    <div class="temperature-wrap">
+                        <div class="temperature">
+                            28<span>°C</span>
+                        </div>
+                        <div class="temperature-meta">
+                            <h3>Partly Cloudy</h3>
+                            <p class="muted" id="feels-like">Feels like --</p>
+                        </div>
+                    </div>
+
+                    <div class="high-low">
+                        <span>↑ High 32°C</span>
+                        <span>↓ Low 23°C</span>
+                    </div>
+                </div>
+
+                <div
+                    class="weather-illustration"
+                    aria-label="Current weather icon"
+                    role="img"
+                >
+                    🌤️
+                </div>
+                <div class="weather-skeleton" id="weather-skeleton" aria-hidden="true" hidden>
+                    <span class="skeleton-line skeleton-location"></span>
+                    <span class="skeleton-line skeleton-temperature"></span>
+                    <span class="skeleton-line skeleton-condition"></span>
+                </div>
+            </section>
+
+            <!-- Hourly Forecast -->
+            <section class="section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Hourly Forecast</h2>
+                        <p class="muted">Weather throughout the day</p>
+                    </div>
+
+                    <span class="muted forecast-hint">The hours ahead</span>
+                </div>
+
+                <!-- JavaScript inserts live hourly cards here -->
+                <div class="hourly-grid" id="hourly-grid"></div>
+            </section>
+
+            <section class="section activity-planner">
+                <div class="section-heading">
+                    <div>
+                        <h2>Best time to go</h2>
+                        <p class="muted">Find a forecast-friendly window for your plans</p>
+                    </div>
+                    <label class="activity-picker">
+                        <span>I'm planning to</span>
+                        <select id="activity-type" aria-label="Choose an activity">
+                            <option value="walk">Go for a walk</option>
+                            <option value="run">Go for a run</option>
+                            <option value="picnic">Have a picnic</option>
+                            <option value="commute">Commute</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="activity-result" id="activity-result" aria-live="polite">
+                    <p class="muted">Your best time window will appear when the forecast loads.</p>
+                </div>
+            </section>
+
+            <!-- Weather Details -->
+            <section class="section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Weather Details</h2>
+                        <p class="muted">Everything you need to know</p>
+                    </div>
+                </div>
+
+                <div class="details-grid">
+                    <article class="detail-card">
+                        <p>💧 Humidity</p>
+                        <h3 id="humidity">--</h3>
+                        <span>Moisture in air</span>
+                    </article>
+
+                    <article class="detail-card">
+                        <p>💨 Wind Speed</p>
+                        <h3 id="wind-speed">--</h3>
+                        <span id="wind-description">Wind conditions</span>
+                    </article>
+
+                    <article class="detail-card">
+                        <p>☀️ UV Index</p>
+                        <h3 id="uv-index">--</h3>
+                        <span id="uv-description">Sun exposure</span>
+                    </article>
+
+                    <article class="detail-card">
+                        <p>👁️ Visibility</p>
+                        <h3 id="visibility">--</h3>
+                        <span id="visibility-description">Visibility conditions</span>
+                    </article>
+
+                    <article class="detail-card">
+                        <p>🌡️ Pressure</p>
+                        <h3 id="pressure">--</h3>
+                        <span>Atmospheric pressure</span>
+                    </article>
+
+                    <article class="detail-card">
+                        <p>🌅 Sunrise</p>
+                        <h3 id="sunrise">--</h3>
+                        <span>Local sunrise</span>
+                    </article>
+
+                    <article class="detail-card">
+                        <p>🌇 Sunset</p>
+                        <h3 id="sunset">--</h3>
+                        <span>Local sunset</span>
+                    </article>
+
+                    <article class="detail-card air-quality-card" id="air-quality-card">
+                        <p>🌿 Air Quality</p>
+                        <h3 id="air-quality-index">--</h3>
+                        <span id="air-quality-description">Waiting for air-quality data</span>
+                        <span id="pm25">PM2.5: --</span>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section suggestions-section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Smart suggestions</h2>
+                        <p class="muted">Helpful tips based on today's conditions</p>
+                    </div>
+                </div>
+                <div class="suggestions-grid" id="smart-suggestions" aria-live="polite"></div>
+            </section>
+
+            <!-- Seven-Day Forecast -->
+            <section class="section">
+                <div class="section-heading">
+                    <div>
+                        <h2>7-Day Forecast</h2>
+                        <p class="muted">Plan your week ahead</p>
+                    </div>
+                </div>
+
+                <div class="weekly-forecast" id="weekly-forecast"></div>
+            </section>
+
+            <!-- Footer -->
+            <footer>
+                <p>SkyCast — Weather insights for every journey.</p>
+                <p>Powered by WeatherAPI.com</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <dialog class="settings-dialog" id="settings-dialog" aria-labelledby="settings-title">
+        <form method="dialog" class="settings-dialog-form">
+            <div class="settings-dialog-heading">
+                <div>
+                    <p class="eyebrow">PREFERENCES</p>
+                    <h2 id="settings-title">Weather settings</h2>
+                </div>
+                <button class="icon-button settings-close" type="submit" aria-label="Close settings">×</button>
+            </div>
+            <label class="settings-unit" for="settings-unit">
+                <span>
+                    <strong>Temperature unit</strong>
+                    <small>Choose how temperatures are displayed</small>
+                </span>
+                <select id="settings-unit" name="temperature-unit">
+                    <option value="C">Celsius (°C)</option>
+                    <option value="F">Fahrenheit (°F)</option>
+                </select>
+            </label>
+        </form>
+    </dialog>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
